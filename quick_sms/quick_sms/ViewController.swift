@@ -2,19 +2,43 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBAction func addCategoryTapped(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: "Yeni Kategori", message: "Kategori adını girin", preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "Kategori Adı"
+        }
+
+        let addAction = UIAlertAction(title: "Ekle", style: .default) { _ in
+            if let categoryName = alert.textFields?.first?.text, !categoryName.isEmpty {
+                self.categories.append(categoryName)
+                self.tableView.reloadData()
+                self.saveCategories()  
+            }
+        }
+
+        let cancelAction = UIAlertAction(title: "İptal", style: .cancel, handler: nil)
+
+        alert.addAction(addAction)
+        alert.addAction(cancelAction)
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
     // TableView outlet'imiz zaten bağlandı
     @IBOutlet weak var tableView: UITableView!
 
     // Kategorileri tutacak dizi
-    let categories = ["Doğum Günü", "Yeni İş", "Yıldönümü", "Tebrik", "Özel Gün", "İyi Dilek"]
+    var categories = ["Doğum Günü", "Yeni İş", "Yıldönümü", "Tebrik", "Özel Gün", "İyi Dilek"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        loadCategories() // Kayıtlı kategorileri çekiyoruz, yeterli.
+        
         // TableView'ın delegate ve dataSource bağlantısı
         tableView.delegate = self
         tableView.dataSource = self
     }
+
 
     // TableView satır sayısını belirleyen fonksiyon
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,6 +59,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
     }
+    func saveCategories() {
+        UserDefaults.standard.set(categories, forKey: "categories")
+    }
+
+    func loadCategories() {
+        if let savedCategories = UserDefaults.standard.array(forKey: "categories") as? [String] {
+            categories = savedCategories
+        }
+    }
+
+
 
 }
 
