@@ -27,7 +27,6 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.title = category
             loadMessages()
 
-            // Eğer hiç kayıtlı mesaj yoksa, varsayılanları yükle
             if messagesToShow.isEmpty {
                 messagesToShow = messageTemplates[category] ?? []
             }
@@ -44,7 +43,7 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
             if let message = alert.textFields?.first?.text, !message.isEmpty {
                 self.messagesToShow.append(message)
                 self.tableView.reloadData()
-                self.saveMessages()  // Kaydediyoruz
+                self.saveMessages()
             }
         }
 
@@ -80,35 +79,61 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
             messagesToShow = savedMessages
         }
     }
+
+    // Mesajı silmek için kaydırma işlemi
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Mesajı listeden kaldır
             messagesToShow.remove(at: indexPath.row)
-            // Güncel listeyi kaydet
             saveMessages()
-            // TableView'dan satırı sil
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
+
+    // Mesajı tıklayınca paylaş veya güncelle seçeneği sun
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let alert = UIAlertController(title: "Mesajı Güncelle", message: "Yeni içeriği girin", preferredStyle: .alert)
-        alert.addTextField { textField in
-            textField.text = self.messagesToShow[indexPath.row]
+        let selectedMessage = messagesToShow[indexPath.row]
+        
+        let alert = UIAlertController(title: "Mesajı Paylaş", message: "Bir uygulama seçin:", preferredStyle: .actionSheet)
+
+        // WhatsApp ile Paylaş
+        let whatsappAction = UIAlertAction(title: "📱 WhatsApp", style: .default) { _ in
+            let urlString = "whatsapp://send?text=\(selectedMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+            if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            } else {
+                self.showAlert(title: "Hata", message: "WhatsApp yüklü değil.")
+            }
         }
 
-        let updateAction = UIAlertAction(title: "Güncelle", style: .default) { _ in
-            if let updatedMessage = alert.textFields?.first?.text, !updatedMessage.isEmpty {
-                self.messagesToShow[indexPath.row] = updatedMessage
-                self.tableView.reloadData()
-                self.saveMessages() // Değişikliği kaydet
+        // iMessage ile Paylaş
+        let iMessageAction = UIAlertAction(title: "💬 iMessage", style: .default) { _ in
+            let urlString = "sms:&body=\(selectedMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+            if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            } else {
+                self.showAlert(title: "Hata", message: "iMessage desteklenmiyor.")
             }
+        }
+
+        // Standart Paylaşım
+        let shareAction = UIAlertAction(title: "📤 Diğer Uygulamalar", style: .default) { _ in
+            let activityVC = UIActivityViewController(activityItems: [selectedMessage], applicationActivities: nil)
+            activityVC.popoverPresentationController?.sourceView = self.view
+            self.present(activityVC, animated: true, completion: nil)
         }
 
         let cancelAction = UIAlertAction(title: "İptal", style: .cancel, handler: nil)
 
-        alert.addAction(updateAction)
+        alert.addAction(whatsappAction)
+        alert.addAction(iMessageAction)
+        alert.addAction(shareAction)
         alert.addAction(cancelAction)
 
+        self.present(alert, animated: true, completion: nil)
+    }
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 
