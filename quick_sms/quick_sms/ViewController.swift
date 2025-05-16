@@ -28,7 +28,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var tableView: UITableView!
 
     // Kategorileri tutacak dizi
-    var categories = ["Doğum Günü", "Yeni İş", "Yıldönümü", "Tebrik", "Özel Gün", "İyi Dilek"]
+    var categories = [
+        "Doğum Günü",
+        "Yeni İş",
+        "Yıldönümü",
+        "Tebrik",
+        "Özel Gün",
+        "İyi Dilek",
+        "Sevgililer Günü",
+        "Anneler Günü",
+        "Babalar Günü",
+        "Bayram Kutlaması",
+        "Geçmiş Olsun",
+        "Başsağlığı",
+        "Kandil Mesajı",
+        "Öğretmenler Günü",
+        "Yeni Yıl Kutlaması",
+        "Ramazan Bayramı",
+        "Kurban Bayramı",
+        "Hoş Geldin Bebek",
+        "Evlenme Tebriği",
+        "Mezuniyet Kutlaması"
+    ]
+
 
     override func viewDidLoad() {
         super.viewDidLoad()

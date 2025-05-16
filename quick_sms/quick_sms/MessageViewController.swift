@@ -14,8 +14,20 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
         "Yıldönümü": ["Mutluluğunuz daim olsun!", "Nice yıllara birlikte!", "Yıldönümünüz kutlu olsun! ❤️"],
         "Tebrik": ["Tebrik ederim, harikasın! 🎉", "Başarını kutluyorum!", "Bravo, çok güzel haber! 👏"],
         "Özel Gün": ["Bugünün senin için özel olmasını dilerim!", "Harika bir gün geçir!", "Özel günlerin hep mutlu geçsin!"],
-        "İyi Dilek": ["Her şey gönlünce olsun!", "Bol şans! 🍀", "İyi günler dilerim! ☀️"]
+        "İyi Dilek": ["Her şey gönlünce olsun!", "Bol şans! 🍀", "İyi günler dilerim! ☀️"],
+        "Sevgililer Günü": ["Seni seviyorum! ❤️", "Birlikte nice güzel yıllara! 💖", "Sevgililer günün kutlu olsun! 🌹"],
+        "Anneler Günü": ["Anneler günün kutlu olsun! 👩‍👧‍👦", "En güzel günler senin olsun anne! 🌸", "Her zaman yanındayım canım annem! ❤️"],
+        "Babalar Günü": ["Babalar günün kutlu olsun! 👨‍👧", "İyi ki varsın baba! 🎉", "Sağlık ve mutluluk dolu bir yıl dilerim baba!"],
+        "Geçmiş Olsun": ["Geçmiş olsun, acil şifalar dilerim! 🙏", "Umarım en kısa sürede iyileşirsin! 🌿", "Her şey yoluna girecek! 😊"],
+        "Başsağlığı": ["Başınız sağ olsun. 🙏", "Allah sabır versin.", "Acınızı paylaşıyorum."],
+        "Kandil Mesajı": ["Kandiliniz mübarek olsun. 🌙", "Hayırlı kandiller dilerim.", "Dualarınız kabul olsun."],
+        "Öğretmenler Günü": ["Öğretmenler gününüz kutlu olsun! 👩‍🏫", "Bize kattıklarınız için teşekkürler!", "İyi ki varsınız hocam! 🌟"],
+        "Yeni Yıl Kutlaması": ["Mutlu Yıllar! 🎉", "Yeni yılın sağlık ve başarı getirsin! 🎆", "Harika bir yıl seni bekliyor! 🎊"],
+        "Hoş Geldin Bebek": ["Aramıza hoş geldin minik! 👶", "Yeni ailenizle mutluluklar dilerim!", "Dünyaya hoş geldin küçük melek!"],
+        "Evlenme Tebriği": ["Mutluluğunuz daim olsun! 💍", "Bir ömür boyu mutluluklar! 🎉", "Harika bir çift oldunuz! ❤️"],
+        "Mezuniyet Kutlaması": ["Mezuniyetini tebrik ederim! 🎓", "Başarılarının devamını dilerim! 🌟", "Hayatın boyunca başarılar! 🎉"]
     ]
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +47,7 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     @IBAction func addMessageTapped(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Yeni Mesaj", message: "Mesaj içeriğini girin", preferredStyle: .alert)
+        
         alert.addTextField { textField in
             textField.placeholder = "Mesaj..."
         }
@@ -48,12 +61,20 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
 
         let cancelAction = UIAlertAction(title: "İptal", style: .cancel, handler: nil)
-
         alert.addAction(addAction)
         alert.addAction(cancelAction)
 
-        self.present(alert, animated: true, completion: nil)
+        // İlk önce Alert'i sunuyoruz.
+        self.present(alert, animated: true) {
+            // Daha sonra TextField'ı aktif hale getiriyoruz.
+            if let textField = alert.textFields?.first {
+                textField.becomeFirstResponder()
+            }
+        }
     }
+
+
+
 
     // TableView Fonksiyonları
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -93,10 +114,30 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedMessage = messagesToShow[indexPath.row]
         
-        let alert = UIAlertController(title: "Mesajı Paylaş", message: "Bir uygulama seçin:", preferredStyle: .actionSheet)
-
-        // WhatsApp ile Paylaş
-        let whatsappAction = UIAlertAction(title: "📱 WhatsApp", style: .default) { _ in
+        let alert = UIAlertController(title: "Seçenekler", message: "Bir işlem seçin:", preferredStyle: .actionSheet)
+        
+        // ✅ Güncelle Butonu
+        let updateAction = UIAlertAction(title: "✏️ Mesajı Güncelle", style: .default) { _ in
+            let updateAlert = UIAlertController(title: "Mesajı Güncelle", message: "Yeni içeriği girin", preferredStyle: .alert)
+            updateAlert.addTextField { textField in
+                textField.text = selectedMessage
+            }
+            
+            let saveAction = UIAlertAction(title: "Kaydet", style: .default) { _ in
+                if let updatedMessage = updateAlert.textFields?.first?.text, !updatedMessage.isEmpty {
+                    self.messagesToShow[indexPath.row] = updatedMessage
+                    self.tableView.reloadData()
+                    self.saveMessages()
+                }
+            }
+            
+            updateAlert.addAction(saveAction)
+            updateAlert.addAction(UIAlertAction(title: "İptal", style: .cancel, handler: nil))
+            self.present(updateAlert, animated: true, completion: nil)
+        }
+        
+        // ✅ WhatsApp ile Paylaş
+        let whatsappAction = UIAlertAction(title: "📱 WhatsApp ile Paylaş", style: .default) { _ in
             let urlString = "whatsapp://send?text=\(selectedMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
             if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url)
@@ -104,33 +145,24 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
                 self.showAlert(title: "Hata", message: "WhatsApp yüklü değil.")
             }
         }
-
-        // iMessage ile Paylaş
-        let iMessageAction = UIAlertAction(title: "💬 iMessage", style: .default) { _ in
-            let urlString = "sms:&body=\(selectedMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-            if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url)
-            } else {
-                self.showAlert(title: "Hata", message: "iMessage desteklenmiyor.")
-            }
-        }
-
-        // Standart Paylaşım
-        let shareAction = UIAlertAction(title: "📤 Diğer Uygulamalar", style: .default) { _ in
+        
+        // ✅ Paylaşım (Genel)
+        let shareAction = UIAlertAction(title: "📤 Diğer Uygulamalarla Paylaş", style: .default) { _ in
             let activityVC = UIActivityViewController(activityItems: [selectedMessage], applicationActivities: nil)
-            activityVC.popoverPresentationController?.sourceView = self.view
             self.present(activityVC, animated: true, completion: nil)
         }
-
+        
         let cancelAction = UIAlertAction(title: "İptal", style: .cancel, handler: nil)
-
+        
+        // Eylemleri ekle
+        alert.addAction(updateAction)
         alert.addAction(whatsappAction)
-        alert.addAction(iMessageAction)
         alert.addAction(shareAction)
         alert.addAction(cancelAction)
-
+        
         self.present(alert, animated: true, completion: nil)
     }
+
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
