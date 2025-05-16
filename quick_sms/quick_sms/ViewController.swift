@@ -12,7 +12,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if let categoryName = alert.textFields?.first?.text, !categoryName.isEmpty {
                 self.categories.append(categoryName)
                 self.tableView.reloadData()
-                self.saveCategories()  
+                self.saveCategories()
             }
         }
 
@@ -73,6 +73,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.textLabel?.text = categories[indexPath.row]
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.contentView.layer.cornerRadius = 12
+        cell.contentView.layer.masksToBounds = true
+        
+        // Gölge efekti
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOffset = CGSize(width: 0, height: 3)
+        cell.layer.shadowRadius = 5
+        cell.layer.shadowOpacity = 0.3
+        cell.layer.masksToBounds = false
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showMessages" {
             if let destinationVC = segue.destination as? MessageViewController,
@@ -94,4 +108,3 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 
 }
-
