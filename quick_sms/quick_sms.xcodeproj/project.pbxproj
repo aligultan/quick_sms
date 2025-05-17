@@ -16,6 +16,7 @@
 		83D1FBBF2DCF7FA100C874FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83D1FBBE2DCF7FA100C874FB /* Assets.xcassets */; };
 		83D1FBC22DCF7FA100C874FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83D1FBC02DCF7FA100C874FB /* LaunchScreen.storyboard */; };
 		ABE8219C2DD8BFA200415CA0 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE8219B2DD8BFA200415CA0 /* SplashViewController.swift */; };
+		ABE8219F2DD8D3CD00415CA0 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE8219E2DD8D3CD00415CA0 /* MessageUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		83D1FBC12DCF7FA100C874FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83D1FBC32DCF7FA100C874FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABE8219B2DD8BFA200415CA0 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		ABE8219E2DD8D3CD00415CA0 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABE8219F2DD8D3CD00415CA0 /* MessageUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +52,7 @@
 				835EA7BF2DCF9CD10001C584 /* MessageViewController.swift */,
 				83D1FBB12DCF7F9F00C874FB /* quick_sms */,
 				83D1FBB02DCF7F9F00C874FB /* Products */,
+				ABE8219D2DD8D3CC00415CA0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +78,14 @@
 				ABE8219B2DD8BFA200415CA0 /* SplashViewController.swift */,
 			);
 			path = quick_sms;
+			sourceTree = "<group>";
+		};
+		ABE8219D2DD8D3CC00415CA0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ABE8219E2DD8D3CD00415CA0 /* MessageUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -1,6 +1,8 @@
 import UIKit
+import MessageUI
 
-class MessageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+class MessageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate {
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -9,24 +11,150 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     // Sabit mesaj şablonları
     let messageTemplates: [String: [String]] = [
-        "Doğum Günü": ["Nice mutlu yıllara! 🎉", "Yeni yaşın sağlık ve mutluluk getirsin!", "Doğum günün kutlu olsun! 🎂"],
-        "Yeni İş": ["Yeni işinde başarılar dilerim!", "Başarı dolu bir kariyer dilerim!", "Yeni işin hayırlı olsun! 👔"],
-        "Yıldönümü": ["Mutluluğunuz daim olsun!", "Nice yıllara birlikte!", "Yıldönümünüz kutlu olsun! ❤️"],
-        "Tebrik": ["Tebrik ederim, harikasın! 🎉", "Başarını kutluyorum!", "Bravo, çok güzel haber! 👏"],
-        "Özel Gün": ["Bugünün senin için özel olmasını dilerim!", "Harika bir gün geçir!", "Özel günlerin hep mutlu geçsin!"],
-        "İyi Dilek": ["Her şey gönlünce olsun!", "Bol şans! 🍀", "İyi günler dilerim! ☀️"],
-        "Sevgililer Günü": ["Seni seviyorum! ❤️", "Birlikte nice güzel yıllara! 💖", "Sevgililer günün kutlu olsun! 🌹"],
-        "Anneler Günü": ["Anneler günün kutlu olsun! 👩‍👧‍👦", "En güzel günler senin olsun anne! 🌸", "Her zaman yanındayım canım annem! ❤️"],
-        "Babalar Günü": ["Babalar günün kutlu olsun! 👨‍👧", "İyi ki varsın baba! 🎉", "Sağlık ve mutluluk dolu bir yıl dilerim baba!"],
-        "Geçmiş Olsun": ["Geçmiş olsun, acil şifalar dilerim! 🙏", "Umarım en kısa sürede iyileşirsin! 🌿", "Her şey yoluna girecek! 😊"],
-        "Başsağlığı": ["Başınız sağ olsun. 🙏", "Allah sabır versin.", "Acınızı paylaşıyorum."],
-        "Kandil Mesajı": ["Kandiliniz mübarek olsun. 🌙", "Hayırlı kandiller dilerim.", "Dualarınız kabul olsun."],
-        "Öğretmenler Günü": ["Öğretmenler gününüz kutlu olsun! 👩‍🏫", "Bize kattıklarınız için teşekkürler!", "İyi ki varsınız hocam! 🌟"],
-        "Yeni Yıl Kutlaması": ["Mutlu Yıllar! 🎉", "Yeni yılın sağlık ve başarı getirsin! 🎆", "Harika bir yıl seni bekliyor! 🎊"],
-        "Hoş Geldin Bebek": ["Aramıza hoş geldin minik! 👶", "Yeni ailenizle mutluluklar dilerim!", "Dünyaya hoş geldin küçük melek!"],
-        "Evlenme Tebriği": ["Mutluluğunuz daim olsun! 💍", "Bir ömür boyu mutluluklar! 🎉", "Harika bir çift oldunuz! ❤️"],
-        "Mezuniyet Kutlaması": ["Mezuniyetini tebrik ederim! 🎓", "Başarılarının devamını dilerim! 🌟", "Hayatın boyunca başarılar! 🎉"]
+        "Doğum Günü": [
+            "Nice mutlu yıllara! 🎉",
+            "Yeni yaşın sağlık ve mutluluk getirsin!",
+            "Doğum günün kutlu olsun! 🎂",
+            "Hayatının bu özel gününde sana sağlık, mutluluk ve başarı diliyorum. İyi ki doğdun!",
+            "Yeni yaşında mutluluğun tavan yapsın, tüm dileklerin gerçek olsun!",
+            "Doğum günün kutlu olsun! Hayat sana her daim güzellikler getirsin!"
+        ],
+        "Yeni İş": [
+            "Yeni işinde başarılar dilerim! 👔",
+            "Kariyerinde yeni bir sayfa, başarıların daim olsun!",
+            "Yeni işin hayırlı ve uğurlu olsun!",
+            "Başarı dolu bir kariyer seni bekliyor, tebrikler!",
+            "Yeni işinde mutluluk ve huzur dilerim!"
+        ],
+        "Yıldönümü": [
+            "Nice mutlu yıllara birlikte! ❤️",
+            "Sevginiz her daim taze kalsın, yıldönümünüz kutlu olsun!",
+            "Hayat boyu el ele, gönül gönüle nice yıllara!",
+            "Sevginiz ömür boyu sürsün!",
+            "Birlikteliğinizin bu özel gününde, nice güzel yıllar dilerim!"
+        ],
+        "Tebrik": [
+            "Tebrikler! Harika bir başarı! 🎉",
+            "Başarını kutluyorum, daha nice başarılara! 👏",
+            "Emeklerinin karşılığını aldın, tebrik ederim!",
+            "Her zaman bu başarılarla gururlan!",
+            "Başarılarının devamını dilerim!"
+        ],
+        "Özel Gün": [
+            "Bugünün senin için özel olmasını dilerim!",
+            "Harika bir gün geçir!",
+            "Özel günlerin hep mutlulukla geçsin!",
+            "Bu özel günün sana neşe ve huzur getirsin!",
+            "Güzel anılarla dolu bir gün geçirmeni dilerim!"
+        ],
+        "İyi Dilek": [
+            "Her şey gönlünce olsun! 🍀",
+            "Bol şans ve mutluluk seninle olsun!",
+            "İyi günler dilerim! ☀️",
+            "Umarım hayatın hep güzel sürprizlerle dolu olur!",
+            "Gönlünden geçen tüm dilekler gerçek olsun!"
+        ],
+        "Sevgililer Günü": [
+            "Seni seviyorum! ❤️",
+            "Birlikte nice güzel yıllara! 💖",
+            "Sevgililer günün kutlu olsun! 🌹",
+            "Sen benim en değerli hediyemsin!",
+            "Kalbimdeki en özel yer senin!"
+        ],
+        "Anneler Günü": [
+            "Anneler günün kutlu olsun! 👩‍👧‍👦",
+            "Canım annem, seni çok seviyorum!",
+            "Dünyanın en güzel annesine sevgiler!",
+            "Fedakarlığın için teşekkürler canım annem!",
+            "İyi ki varsın, iyi ki benim annemsin!"
+        ],
+        "Babalar Günü": [
+            "Babalar günün kutlu olsun! 👨‍👧",
+            "İyi ki varsın babacığım! 🎉",
+            "Senin gibi bir baba olduğu için çok şanslıyım!",
+            "Babam, her zaman en büyük kahramanım!",
+            "Sana minnettarım babacığım!"
+        ],
+        "Bayram Kutlaması": [
+            "Bayramınız kutlu olsun, sağlık ve huzur dilerim!",
+            "Sevdiklerinizle birlikte mutlu bayramlar!",
+            "Bayramın mutluluk ve barış getirmesini dilerim!",
+            "Bayram sevinci gönlünüzden hiç eksik olmasın!",
+            "Hayırlı bayramlar, nice mutlu günlere!"
+        ],
+        "Geçmiş Olsun": [
+            "Geçmiş olsun, acil şifalar dilerim! 🙏",
+            "Bir an önce sağlığına kavuşmanı dilerim!",
+            "Her şey yoluna girecek, güçlü kal!",
+            "Umarım en kısa sürede sağlığın yerine gelir!",
+            "Kendine iyi bak, seni iyi görmek istiyoruz!"
+        ],
+        "Başsağlığı": [
+            "Başınız sağ olsun. 🙏",
+            "Allah rahmet eylesin, mekanı cennet olsun.",
+            "Bu zor günlerde dualarım sizinle.",
+            "Acınızı paylaşıyorum, Allah sabır versin.",
+            "Kaybınız için çok üzgünüm, başınız sağ olsun."
+        ],
+        "Kandil Mesajı": [
+            "Kandiliniz mübarek olsun. 🌙",
+            "Dualarınız kabul olsun, hayırlı kandiller!",
+            "Bu mübarek gecede tüm dilekleriniz gerçek olsun.",
+            "Kandil geceniz hayırlara vesile olsun.",
+            "Allah huzur ve mutluluğu üzerinizden eksik etmesin!"
+        ],
+        "Öğretmenler Günü": [
+            "Öğretmenler gününüz kutlu olsun! 👩‍🏫",
+            "Bize kattığınız her şey için teşekkürler!",
+            "İyi ki varsınız değerli öğretmenim! 🌟",
+            "Yolumuzu aydınlattığınız için teşekkür ederiz!",
+            "Emekleriniz için minnettarız!"
+        ],
+        "Yeni Yıl Kutlaması": [
+            "Mutlu Yıllar! 🎉",
+            "Yeni yılın sağlık, mutluluk ve başarı getirsin! 🎆",
+            "Yeni yılda tüm dileklerin gerçekleşsin!",
+            "Sevdiklerinle huzurlu ve neşeli bir yıl dilerim!",
+            "Yeni yılda hayallerin gerçek olsun!"
+        ],
+        "Ramazan Bayramı": [
+            "Ramazan Bayramınız mübarek olsun!",
+            "Bayramınız sağlık ve huzur dolu geçsin!",
+            "Sevdiklerinizle birlikte mutlu bayramlar dilerim!",
+            "Bayramın bereketi ve sevinci hep sizinle olsun!",
+            "Hayırlı Ramazan Bayramları!"
+        ],
+        "Kurban Bayramı": [
+            "Kurban Bayramınız mübarek olsun!",
+            "Bayramda sevdiklerinizle huzurlu anlar dilerim!",
+            "Kurban Bayramı'nın getirdiği bereket üzerinizde olsun!",
+            "Bayramınız kutlu olsun, nice bayramlara!",
+            "Bayram sevinciniz daim olsun!"
+        ],
+        "Hoş Geldin Bebek": [
+            "Aramıza hoş geldin minik melek! 👶",
+            "Allah analı babalı büyütsün!",
+            "Dünyaya hoş geldin küçük mucize!",
+            "Bebeğinizin sağlıklı ve mutlu bir ömrü olsun!",
+            "Hayatınıza neşe katan minik için tebrikler!"
+        ],
+        "Evlenme Tebriği": [
+            "Mutluluğunuz daim olsun! 💍",
+            "Bir ömür boyu mutluluklar! 🎉",
+            "Yuvanız sevgiyle dolsun!",
+            "Allah mesut etsin, mutluluğunuz daim olsun!",
+            "Birlikte nice güzel günler dilerim!"
+        ],
+        "Mezuniyet Kutlaması": [
+            "Mezuniyetini tebrik ederim! 🎓",
+            "Başarıların daim olsun!",
+            "Yeni hayatında başarı ve mutluluk dilerim!",
+            "Bugün bir yol bitti, yeni yollar seni bekliyor!",
+            "Hayallerinin peşinden git, gurur duyuyorum!"
+        ]
     ]
+
+
 
 
     override func viewDidLoad() {
@@ -167,6 +295,11 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
                 self.showAlert(title: "Hata", message: "WhatsApp yüklü değil.")
             }
         }
+        // 📞 SMS ile Gönder ve Rehber Aç
+        let smsAction = UIAlertAction(title: "📲 SMS ile Gönder", style: .default) { _ in
+            self.sendSMS(message: message)
+        }
+
 
         // Diğer Uygulamalarla Paylaş
         let shareAction = UIAlertAction(title: "📤 Diğer Uygulamalarla Paylaş", style: .default) { _ in
@@ -176,6 +309,7 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
 
         alert.addAction(updateAction)
         alert.addAction(whatsappAction)
+        alert.addAction(smsAction)
         alert.addAction(shareAction)
         alert.addAction(UIAlertAction(title: "İptal", style: .cancel, handler: nil))
 
@@ -188,6 +322,23 @@ class MessageViewController: UIViewController, UITableViewDelegate, UITableViewD
         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
+    func sendSMS(message: String) {
+        if MFMessageComposeViewController.canSendText() {
+            let messageVC = MFMessageComposeViewController()
+            messageVC.body = message
+            messageVC.messageComposeDelegate = self
+            
+            // Kullanıcı burada rehberden kişi seçecek, numara vermene gerek yok.
+            self.present(messageVC, animated: true, completion: nil)
+        } else {
+            self.showAlert(title: "Hata", message: "Bu cihaz SMS gönderemiyor veya SIM kart takılı değil.")
+        }
+    }
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+
+
 
 
 }
