@@ -15,6 +15,7 @@
 		83D1FBBD2DCF7F9F00C874FB /* quick_sms.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 83D1FBBB2DCF7F9F00C874FB /* quick_sms.xcdatamodeld */; };
 		83D1FBBF2DCF7FA100C874FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83D1FBBE2DCF7FA100C874FB /* Assets.xcassets */; };
 		83D1FBC22DCF7FA100C874FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83D1FBC02DCF7FA100C874FB /* LaunchScreen.storyboard */; };
+		ABE8219C2DD8BFA200415CA0 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE8219B2DD8BFA200415CA0 /* SplashViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		83D1FBBE2DCF7FA100C874FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83D1FBC12DCF7FA100C874FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83D1FBC32DCF7FA100C874FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ABE8219B2DD8BFA200415CA0 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				83D1FBC02DCF7FA100C874FB /* LaunchScreen.storyboard */,
 				83D1FBC32DCF7FA100C874FB /* Info.plist */,
 				83D1FBBB2DCF7F9F00C874FB /* quick_sms.xcdatamodeld */,
+				ABE8219B2DD8BFA200415CA0 /* SplashViewController.swift */,
 			);
 			path = quick_sms;
 			sourceTree = "<group>";
@@ -147,6 +150,7 @@
 				83D1FBB72DCF7F9F00C874FB /* ViewController.swift in Sources */,
 				83D1FBBD2DCF7F9F00C874FB /* quick_sms.xcdatamodeld in Sources */,
 				83D1FBB32DCF7F9F00C874FB /* AppDelegate.swift in Sources */,
+				ABE8219C2DD8BFA200415CA0 /* SplashViewController.swift in Sources */,
 				83D1FBB52DCF7F9F00C874FB /* SceneDelegate.swift in Sources */,
 				835EA7C02DCF9CD10001C584 /* MessageViewController.swift in Sources */,
 			);
